@@ -1,0 +1,26 @@
+.container {
+  padding: 3px;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.codeTextArea {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  font-size: large;
+  resize: none;
+}
+
+.staticTextArea {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  font-size: large;
+  resize: none;
+}
+
+.staticTextArea:focus {
+  outline: none;
+}
