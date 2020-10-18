@@ -7,7 +7,7 @@ const StaticTextArea = (props) => (
     <textarea
       className={classes.staticTextArea}
       value={props.value}
-      readOnly
+      readOnly={true}
     ></textarea>
   </div>
 );

@@ -9,6 +9,7 @@ const CodeTextArea = (props) => (
     <textarea
       className={classes.codeTextArea}
       onInput={props.onInput}
+      onChange={(e) => {}}
       value={props.value}
     ></textarea>
   </div>

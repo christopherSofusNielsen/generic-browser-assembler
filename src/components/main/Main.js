@@ -9,7 +9,10 @@ const Main = (props) => (
   <div className={classes.container}>
     <h1>Browser assembler</h1>
     <div>
-      <ControlPanel onCompile={props.onCompile} />
+      <ControlPanel
+        onCompile={props.onCompile}
+        onLoadExample={props.onLoadExample}
+      />
     </div>
     <div className={classes.frames}>
       <CodeTextArea value={props.codeTxtValue} onInput={props.onCodeInput} />
