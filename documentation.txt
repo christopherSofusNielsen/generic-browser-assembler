@@ -1,0 +1,19 @@
+
+
+##inputs
+    - define the parameters
+        - all is converted to a binary representation based on the info
+    - types:
+        - SIGN -> 2's complement signed integer
+        - UNSIGN -> unsigned integer
+        - ADDR -> as SIGN but will use labels to calculate the value
+
+    - if ADDR then relative must be set true or false
+
+
+##outputs
+    - defines the structure of word
+        - by default it will copy the binary representation 
+        - will insert in the defined order
+
+

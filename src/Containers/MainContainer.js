@@ -1,5 +1,9 @@
 import React, { Component } from "react";
 
+//other
+import * as types from "../assets/constants";
+import * as formatter from "../models/formatter";
+
 //data
 import defaultISA from "../assets/default-isa.json";
 import example from "../assets/example";
@@ -18,8 +22,13 @@ class MainContainer extends Component {
       codeTxtValue: "",
       compiledCode: "",
       consoleValue: "",
+      displayMode: types.BINARY_DEBUG_MODE,
     };
   }
+
+  arrayToText = (arr) => {
+    return arr.join("\n");
+  };
 
   loadExample = () => {
     this.setState({ codeTxtValue: example });
@@ -28,10 +37,38 @@ class MainContainer extends Component {
   compileCode = () => {
     let isa = this.state.defaultIsa;
     let compiler = new Compiler(isa, this.state.codeTxtValue);
-    compiler.compile();
-    console.log(compiler.raw());
+    if (!compiler.compile()) {
+      this.setState({ consoleValue: this.arrayToText(compiler.consoleOut()) });
+    } else {
+      this.selectDisplay(compiler.raw());
+    }
+  };
 
-    this.setState({ compiledCode: "Compiled" });
+  selectDisplay = (raw) => {
+    switch (this.state.displayMode) {
+      case types.BINARY_MODE:
+        this.displayCode(raw, formatter.binaryFormatter);
+        break;
+
+      case types.BINARY_DEBUG_MODE:
+        this.displayCode(raw, formatter.binaryDebugFormatter);
+        break;
+
+      default:
+    }
+  };
+
+  displayCode = (raw, formatter) => {
+    try {
+      this.setState({ compiledCode: formatter(raw) });
+      this.setState({ consoleValue: "Code successfully compiled!" });
+    } catch (error) {
+      console.log(error);
+      this.setState({
+        compileCode: "",
+        consoleValue: `An error occured formatting compiled code!`,
+      });
+    }
   };
 
   render() {
