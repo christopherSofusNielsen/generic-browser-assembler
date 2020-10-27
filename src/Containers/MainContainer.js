@@ -23,8 +23,14 @@ class MainContainer extends Component {
       compiledCode: "",
       consoleValue: "",
       displayMode: types.BINARY_DEBUG_MODE,
+      raw: [],
     };
   }
+
+  onDisplayModeChange = (e) => {
+    this.setState({ displayMode: e.target.value });
+    this.selectDisplay();
+  };
 
   arrayToText = (arr) => {
     return arr.join("\n");
@@ -40,12 +46,14 @@ class MainContainer extends Component {
     if (!compiler.compile()) {
       this.setState({ consoleValue: this.arrayToText(compiler.consoleOut()) });
     } else {
-      this.selectDisplay(compiler.raw());
+      this.setState({ raw: compiler.raw() });
+      this.selectDisplay();
     }
   };
 
-  selectDisplay = (raw) => {
-    switch (this.state.displayMode) {
+  selectDisplay = () => {
+    const { displayMode, raw } = this.state;
+    switch (displayMode) {
       case types.BINARY_MODE:
         this.displayCode(raw, formatter.binaryFormatter);
         break;
