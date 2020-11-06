@@ -12,6 +12,8 @@ const Main = (props) => (
       <ControlPanel
         onCompile={props.onCompile}
         onLoadExample={props.onLoadExample}
+        onDisplayModeChange={props.onDisplayModeChange}
+        displayMode={props.displayMode}
       />
     </div>
     <div className={classes.frames}>

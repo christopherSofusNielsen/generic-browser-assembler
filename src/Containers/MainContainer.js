@@ -29,7 +29,6 @@ class MainContainer extends Component {
 
   onDisplayModeChange = (e) => {
     this.setState({ displayMode: e.target.value });
-    this.selectDisplay();
   };
 
   arrayToText = (arr) => {
@@ -46,7 +45,10 @@ class MainContainer extends Component {
     if (!compiler.compile()) {
       this.setState({ consoleValue: this.arrayToText(compiler.consoleOut()) });
     } else {
-      this.setState({ raw: compiler.raw() });
+      this.setState({ 
+        raw: compiler.raw(),
+        consoleValue:"Code successfully compiled!"
+      });
       this.selectDisplay();
     }
   };
@@ -55,12 +57,10 @@ class MainContainer extends Component {
     const { displayMode, raw } = this.state;
     switch (displayMode) {
       case types.BINARY_MODE:
-        this.displayCode(raw, formatter.binaryFormatter);
-        break;
+        return this.displayCode(raw, formatter.binaryFormatter);
 
       case types.BINARY_DEBUG_MODE:
-        this.displayCode(raw, formatter.binaryDebugFormatter);
-        break;
+        return this.displayCode(raw, formatter.binaryDebugFormatter);
 
       default:
     }
@@ -68,25 +68,34 @@ class MainContainer extends Component {
 
   displayCode = (raw, formatter) => {
     try {
-      this.setState({ compiledCode: formatter(raw) });
-      this.setState({ consoleValue: "Code successfully compiled!" });
+     return { 
+        compiledCode: formatter(raw),
+       
+     }
+     
     } catch (error) {
       console.log(error);
-      this.setState({
-        compileCode: "",
-        consoleValue: `An error occured formatting compiled code!`,
-      });
+      alert("Format error")
+      return { 
+        compiledCode: "",
+     }
     }
   };
 
+ 
+
   render() {
+
+    const {compiledCode, consoleValue}=this.selectDisplay()
     return (
       <Main
         onCodeInput={(e) => this.setState({ codeTxtValue: e.target.value })}
         onCompile={this.compileCode}
         onLoadExample={this.loadExample}
+        onDisplayModeChange={this.onDisplayModeChange}
+        displayMode={this.state.displayMode}
         codeTxtValue={this.state.codeTxtValue}
-        compiledCode={this.state.compiledCode}
+        compiledCode={compiledCode}
         consoleValue={this.state.consoleValue}
       />
     );

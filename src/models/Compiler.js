@@ -54,7 +54,8 @@ class Compiler {
             this.state.isa,
             instrISA.mnemonic,
             instrISA.input[i],
-            o.parameters[i]
+            o.parameters[i],
+            this.state.labelTbl
           );
           parametersB[i] = res;
         }

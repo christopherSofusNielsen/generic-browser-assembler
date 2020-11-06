@@ -2,15 +2,15 @@
     "wordSize":32,
     "addressJump":1,
     "regs":[
-        {"name":"r0", "out":"00000000"},
-        {"name":"r1", "out":"00000001"},
-        {"name":"r2", "out":"00000010"},
-        {"name":"r3", "out":"00000011"}
+        {"name":"r0", "out":"0000"},
+        {"name":"r1", "out":"0001"},
+        {"name":"r2", "out":"0010"},
+        {"name":"r3", "out":"0011"}
     ],
     "instrs":[
         {
             "mnemonic":"add",
-            "opcode":"00000001",
+            "opcode":"0001",
             "input":[
                 {
                     "name":"rd",
@@ -36,6 +36,37 @@
                 },
                 {
                     "ref":"rb"
+                }
+            ]
+        },
+        {
+            "mnemonic":"lbi",
+            "opcode":"0011",
+            "input":[
+                {
+                    "name":"rd",
+                    "type":"REG"
+                },{
+                    "name":"imm",
+                    "type":"UINT",
+                    "size":8
+                }
+            ],
+            "output":[
+                {
+                    "ref":"instr"
+                },
+                {
+                    "ref":"rd"
+                },
+                {
+                    "ref":"imm",
+                    "msb":7,
+                    "lsb":0
+                },
+                {
+                    "ref":"const",
+                    "value":"0000000000000000"
                 }
             ]
         },

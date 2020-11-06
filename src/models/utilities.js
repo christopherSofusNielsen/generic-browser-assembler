@@ -34,7 +34,9 @@ export const removeComments = (txt) => {
   });
 
   return compiled;
-};
+}
+
+
 
 export const createlabelTable = (code, instructSize) => {
   let tbl = {};
@@ -46,6 +48,7 @@ export const createlabelTable = (code, instructSize) => {
       preCompiledCode.push({
         ...o,
         ...splittedRow,
+        addr:cnt
       });
       cnt++;
       return;
@@ -74,18 +77,7 @@ export const findInstr = (instr, isaInstr) => {
   return isaInstr[index];
 };
 
-export const convertParameter = (isa, instr, parISA, par) => {
-  switch (parISA.type) {
-    case types.REG:
-      //its a register, make sure it exist
-      return findRegister(isa, par);
 
-    default:
-      throw new Error(
-        `No type assigned to instruction ${instr} in ISA-config file.`
-      );
-  }
-};
 
 export const joinParameters = (isaInstr, parametersB) => {
   let word = [];
@@ -93,7 +85,9 @@ export const joinParameters = (isaInstr, parametersB) => {
   isaInstr.output.forEach((out) => {
     if (out.ref === "instr") {
       word.push(isaInstr.opcode);
-    } else {
+    }else if(out.ref === "const"){
+      word.push(out.value)
+    }else {
       //ref must be in input
       let index = isaInstr.input.findIndex((inp) => {
         return inp.name === out.ref;
@@ -105,9 +99,10 @@ export const joinParameters = (isaInstr, parametersB) => {
         );
       }
 
-      let info = isaInstr.input[index];
-
-      if (Object.keys(info) > 1) {
+      if (Object.keys(out).length > 1) {
+        let l=parametersB[index].length-1;
+        let subStr=parametersB[index].substring(l-out.msb, l-out.lsb+1)
+        word.push(subStr);
       } else {
         word.push(parametersB[index]);
       }
@@ -117,6 +112,21 @@ export const joinParameters = (isaInstr, parametersB) => {
   let wordJoined = word.join("");
 
   return wordJoined;
+};
+
+export const convertParameter = (isa, instr, parISA, par, labelTbl) => {
+  switch (parISA.type) {
+    case types.REG:
+      return findRegister(isa, par);
+
+    case types.UINT:
+      return toUint(parISA, par);
+
+    default:
+      throw new Error(
+        `No type assigned to instruction ${instr} in ISA-config file.`
+      );
+  }
 };
 
 const findRegister = (isa, reg) => {
@@ -134,6 +144,27 @@ const findRegister = (isa, reg) => {
 
   return isa.regs[index].out;
 };
+
+const toUint=(parIsa, strVal)=>{
+  let value=parseInt(strVal);
+  //test if value are inside range
+  if(value>Math.pow(2,parIsa.size)-1 || value<0){
+    throw new Error(`Outside range: ${value}`);
+  }
+  let bit=value.toString(2);
+  bit=extend(parIsa.size, bit);
+  return bit;
+}
+
+const extend=(size, value)=>{
+  let n=size-value.length;
+
+  for(let i=0; i<n; i++){
+    value='0'+value
+  }
+  return value;
+}
+
 
 const splitRow = (row) => {
   const firstSpace = row.indexOf(" ");

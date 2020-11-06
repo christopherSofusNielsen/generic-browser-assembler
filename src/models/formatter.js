@@ -1,9 +1,9 @@
 export const binaryFormatter = (raw) => {
   let txt = raw.map((o) => {
     let w = [];
-    w.push(o.word.substring(0, 7));
-    w.push(o.word.substring(8, 15));
-    w.push(o.word.substring(16, 23));
+    w.push(o.word.substring(0, 8));
+    w.push(o.word.substring(8, 16));
+    w.push(o.word.substring(16, 24));
     w.push(o.word.substring(24));
     return w.join("-");
   });
@@ -21,9 +21,9 @@ export const binaryDebugFormatter = (raw) => {
     }
 
     let w = [];
-    w.push(o.word.substring(0, 7));
-    w.push(o.word.substring(8, 15));
-    w.push(o.word.substring(16, 23));
+    w.push(o.word.substring(0, 8));
+    w.push(o.word.substring(8, 16));
+    w.push(o.word.substring(16, 24));
     w.push(o.word.substring(24));
     txt.push(w.join("-"));
     cnt++;
