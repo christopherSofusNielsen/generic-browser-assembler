@@ -34,9 +34,7 @@ export const removeComments = (txt) => {
   });
 
   return compiled;
-}
-
-
+};
 
 export const createlabelTable = (code, instructSize) => {
   let tbl = {};
@@ -48,7 +46,7 @@ export const createlabelTable = (code, instructSize) => {
       preCompiledCode.push({
         ...o,
         ...splittedRow,
-        addr:cnt
+        addr: cnt,
       });
       cnt++;
       return;
@@ -77,17 +75,15 @@ export const findInstr = (instr, isaInstr) => {
   return isaInstr[index];
 };
 
-
-
 export const joinParameters = (isaInstr, parametersB) => {
   let word = [];
 
   isaInstr.output.forEach((out) => {
     if (out.ref === "instr") {
       word.push(isaInstr.opcode);
-    }else if(out.ref === "const"){
-      word.push(out.value)
-    }else {
+    } else if (out.ref === "const") {
+      word.push(out.value);
+    } else {
       //ref must be in input
       let index = isaInstr.input.findIndex((inp) => {
         return inp.name === out.ref;
@@ -100,8 +96,8 @@ export const joinParameters = (isaInstr, parametersB) => {
       }
 
       if (Object.keys(out).length > 1) {
-        let l=parametersB[index].length-1;
-        let subStr=parametersB[index].substring(l-out.msb, l-out.lsb+1)
+        let l = parametersB[index].length - 1;
+        let subStr = parametersB[index].substring(l - out.msb, l - out.lsb + 1);
         word.push(subStr);
       } else {
         word.push(parametersB[index]);
@@ -114,19 +110,102 @@ export const joinParameters = (isaInstr, parametersB) => {
   return wordJoined;
 };
 
-export const convertParameter = (isa, instr, parISA, par, labelTbl) => {
-  switch (parISA.type) {
-    case types.REG:
-      return findRegister(isa, par);
+// export const convertParameter = (isa, instr, parISA, par, labelTbl) => {
+//   switch (parISA.type) {
+//     case types.REG:
+//       return findRegister(isa, par);
 
-    case types.UINT:
-      return toUint(parISA, par);
+//     case types.UINT:
+//       return toUint(parISA, par);
 
-    default:
-      throw new Error(
-        `No type assigned to instruction ${instr} in ISA-config file.`
-      );
+//     default:
+//       throw new Error(
+//         `No type assigned to instruction ${instr} in ISA-config file.`
+//       );
+//   }
+// };
+
+export const convertParameters = (isa, labelTbl, instr, row) => {
+  let parsed = [];
+
+  instr.input.forEach((input, no) => {
+    let bits = "";
+    switch (input.type) {
+      case types.LABEL:
+        bits = labelToBits(
+          labelTbl,
+          row.parameters[no],
+          row.addr,
+          input.size,
+          input.relative
+        );
+        break;
+
+      case types.REG:
+        bits = findRegister(isa, row.parameters[no]);
+        break;
+      case types.UINT:
+        bits = toUint(input.size, row.parameters[no]);
+        break;
+    }
+    parsed.push(bits);
+  });
+  return parsed;
+};
+
+const labelToBits = (labelTbl, lbl, addr, size, relative) => {
+  //check if label exist
+  let lblAddr = labelTbl[lbl];
+  let hardCoded=false;
+
+  if (lblAddr === undefined) {
+    //check if the label is hardcoded
+    let parsedLbl = parseInt(lbl);
+    if (isNaN(parsedLbl)) {
+      throw new Error(`Label ${lbl}, does not exist in program`);
+    }
+    lblAddr = parsedLbl;
+    hardCoded=true;
   }
+
+  //convert label to address, based on relative
+  if (relative && !hardCoded) {
+    let ra = calcRelativeAddress(lblAddr, addr, size);
+    let rab = signedIntToBit(ra, size);
+    return rab;
+  } else {
+    let da = signedIntToBit(lblAddr, size);
+    let dab = extend(size, da.toString(2));
+    return dab;
+  }
+};
+
+const calcRelativeAddress = (toAddr, fromAddr, size) => {
+  let ta = parseInt(toAddr);
+  let fa = parseInt(fromAddr);
+
+  if (isNaN(ta) || isNaN(fa)) {
+    throw new Error(`Error calculating relative address`);
+  }
+
+  let ra = ta - fa;
+
+  if (ra > Math.pow(2, size - 1) - 1 || ra < -1 * Math.pow(2, size - 1)) {
+    throw new Error(`Outside range: ${ra}`);
+  }
+
+  return ra;
+};
+
+const convertUint = (strVal, bitSize) => {
+  let value = parseInt(strVal);
+  if (isNaN(value)) {
+    throw new Error(`Expected integer, got ${strVal}`);
+  }
+  if (value > Math.pow(2, bitSize) - 1 || value < 0) {
+    throw new Error(`Outside range: ${value}`);
+  }
+  return value;
 };
 
 const findRegister = (isa, reg) => {
@@ -145,26 +224,39 @@ const findRegister = (isa, reg) => {
   return isa.regs[index].out;
 };
 
-const toUint=(parIsa, strVal)=>{
-  let value=parseInt(strVal);
+const toUint = (bitSize, strVal) => {
+  let value = parseInt(strVal);
   //test if value are inside range
-  if(value>Math.pow(2,parIsa.size)-1 || value<0){
+  if (value > Math.pow(2, bitSize) - 1 || value < 0) {
     throw new Error(`Outside range: ${value}`);
   }
-  let bit=value.toString(2);
-  bit=extend(parIsa.size, bit);
+  let bit = value.toString(2);
+  bit = extend(bitSize, bit);
   return bit;
-}
+};
 
-const extend=(size, value)=>{
-  let n=size-value.length;
+const signedIntToBit = (value, size) => {
+  let bits = (value >>> 0).toString(2);
 
-  for(let i=0; i<n; i++){
-    value='0'+value
+  let l = bits.length;
+  if (l > size) {
+    return bits.substring(l - size, l);
+  } else {
+    for (let i = 0; i < size; i++) {
+      bits = "0" + bits;
+    }
+    return bits;
+  }
+};
+
+const extend = (size, value) => {
+  let n = size - value.length;
+
+  for (let i = 0; i < n; i++) {
+    value = "0" + value;
   }
   return value;
-}
-
+};
 
 const splitRow = (row) => {
   const firstSpace = row.indexOf(" ");

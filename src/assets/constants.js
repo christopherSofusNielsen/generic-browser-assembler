@@ -10,3 +10,4 @@ export const BINARY_DEBUG_MODE = "BINARY_DEBUG_MODE";
 //input parameter types
 export const REG = "REG";
 export const UINT="UINT";
+

@@ -5,12 +5,56 @@
         {"name":"r0", "out":"0000"},
         {"name":"r1", "out":"0001"},
         {"name":"r2", "out":"0010"},
-        {"name":"r3", "out":"0011"}
+        {"name":"r3", "out":"0011"},
+        {"name":"r4", "out":"0100"},
+        {"name":"r5", "out":"0101"},
+        {"name":"r6", "out":"0110"},
+        {"name":"r7", "out":"0111"},
+        {"name":"r8", "out":"1000"},
+        {"name":"r9", "out":"1001"},
+        {"name":"r10", "out":"1010"},
+        {"name":"r11", "out":"1011"},
+        {"name":"r12", "out":"1100"},
+        {"name":"r13", "out":"1101"},
+        {"name":"r14", "out":"1110"},
+        {"name":"r15", "out":"1111"}
     ],
     "instrs":[
         {
-            "mnemonic":"add",
+            "mnemonic":"mov",
             "opcode":"0001",
+            "input":[
+                {
+                    "name":"rd",
+                    "type":"REG"
+                },{
+                    "name":"ra",
+                    "type":"REG"
+                }
+            ],
+            "output":[
+                {
+                    "ref":"instr"
+                },
+                {
+                    "ref":"rd"
+                },
+                {
+                    "ref":"ra"
+                },
+                {
+                    "ref":"const",
+                    "value":"0000"
+                },
+                {
+                    "ref":"const",
+                    "value":"0000000000000000"
+                }
+            ]
+        },
+        {
+            "mnemonic":"add",
+            "opcode":"0010",
             "input":[
                 {
                     "name":"rd",
@@ -36,12 +80,265 @@
                 },
                 {
                     "ref":"rb"
+                },
+                {
+                    "ref":"const",
+                    "value":"0000000000000000"
+                }
+            ]
+        },
+        {
+            "mnemonic":"sub",
+            "opcode":"0011",
+            "input":[
+                {
+                    "name":"rd",
+                    "type":"REG"
+                },{
+                    "name":"ra",
+                    "type":"REG"
+                },
+                {
+                    "name":"rb",
+                    "type":"REG"
+                }
+            ],
+            "output":[
+                {
+                    "ref":"instr"
+                },
+                {
+                    "ref":"rd"
+                },
+                {
+                    "ref":"ra"
+                },
+                {
+                    "ref":"rb"
+                },
+                {
+                    "ref":"const",
+                    "value":"0000000000000000"
+                }
+            ]
+        },
+        {
+            "mnemonic":"and",
+            "opcode":"0100",
+            "input":[
+                {
+                    "name":"rd",
+                    "type":"REG"
+                },{
+                    "name":"ra",
+                    "type":"REG"
+                },
+                {
+                    "name":"rb",
+                    "type":"REG"
+                }
+            ],
+            "output":[
+                {
+                    "ref":"instr"
+                },
+                {
+                    "ref":"rd"
+                },
+                {
+                    "ref":"ra"
+                },
+                {
+                    "ref":"rb"
+                },
+                {
+                    "ref":"const",
+                    "value":"0000000000000000"
+                }
+            ]
+        },
+        {
+            "mnemonic":"or",
+            "opcode":"0101",
+            "input":[
+                {
+                    "name":"rd",
+                    "type":"REG"
+                },{
+                    "name":"ra",
+                    "type":"REG"
+                },
+                {
+                    "name":"rb",
+                    "type":"REG"
+                }
+            ],
+            "output":[
+                {
+                    "ref":"instr"
+                },
+                {
+                    "ref":"rd"
+                },
+                {
+                    "ref":"ra"
+                },
+                {
+                    "ref":"rb"
+                },
+                {
+                    "ref":"const",
+                    "value":"0000000000000000"
+                }
+            ]
+        },
+        {
+            "mnemonic":"sl",
+            "opcode":"0110",
+            "input":[
+                {
+                    "name":"rd",
+                    "type":"REG"
+                },{
+                    "name":"rb",
+                    "type":"REG"
+                },
+                {
+                    "name":"no",
+                    "type":"UINT",
+                    "size":4
+                }
+            ],
+            "output":[
+                {
+                    "ref":"instr"
+                },
+                {
+                    "ref":"rd"
+                },
+                {
+                    "ref":"no",
+                    "msb":3,
+                    "lsb":0
+                },
+                {
+                    "ref":"rb"
+                },
+                {
+                    "ref":"const",
+                    "value":"0000000000000000"
+                }
+            ]
+        },
+        {
+            "mnemonic":"sr",
+            "opcode":"0111",
+            "input":[
+                {
+                    "name":"rd",
+                    "type":"REG"
+                },{
+                    "name":"rb",
+                    "type":"REG"
+                },
+                {
+                    "name":"no",
+                    "type":"UINT",
+                    "size":4
+                },
+                {
+                    "ref":"const",
+                    "value":"0000000000000000"
+                }
+            ],
+            "output":[
+                {
+                    "ref":"instr"
+                },
+                {
+                    "ref":"rd"
+                },
+                {
+                    "ref":"no",
+                    "msb":3,
+                    "lsb":0
+                },
+                {
+                    "ref":"rb"
+                },
+                {
+                    "ref":"const",
+                    "value":"0000000000000000"
+                }
+            ]
+        },
+        {
+            "mnemonic":"ld",
+            "opcode":"1000",
+            "input":[
+                {
+                    "name":"rd",
+                    "type":"REG"
+                },{
+                    "name":"ra",
+                    "type":"REG"
+                }
+            ],
+            "output":[
+                {
+                    "ref":"instr"
+                },
+                {
+                    "ref":"rd"
+                },
+                {
+                    "ref":"ra"
+                },
+                {
+                    "ref":"const",
+                    "value":"0000"
+                },
+                {
+                    "ref":"const",
+                    "value":"0000000000000000"
+                }
+            ]
+        },
+        {
+            "mnemonic":"st",
+            "opcode":"1001",
+            "input":[
+                {
+                    "name":"ra",
+                    "type":"REG"
+                },{
+                    "name":"rb",
+                    "type":"REG"
+                }
+            ],
+            "output":[
+                {
+                    "ref":"instr"
+                },
+                {
+                    "ref":"const",
+                    "value":"0000"
+                },
+                {
+                    "ref":"ra"
+                },
+                {
+                    "ref":"rb"
+                },
+                {
+                    "ref":"const",
+                    "value":"0000000000000000"
                 }
             ]
         },
         {
             "mnemonic":"lbi",
-            "opcode":"0011",
+            "opcode":"1010",
             "input":[
                 {
                     "name":"rd",
@@ -71,17 +368,155 @@
             ]
         },
         {
-            "mnemonic":"jzd",
-            "opcode":"00000011",
+            "mnemonic":"bze",
+            "opcode":"1011",
             "input":[
                 {
                     "name":"ra",
                     "type":"REG"
+                },{
+                    "name":"off",
+                    "type":"LABEL",
+                    "relative":true,
+                    "size":8
+                }
+            ],
+            "output":[
+                {
+                    "ref":"instr"
                 },
                 {
+                    "ref":"off",
+                    "msb":7,
+                    "lsb":4
+                },
+                {
+                    "ref":"ra"
+                },
+                {
+                    "ref":"off",
+                    "msb":3,
+                    "lsb":0
+                },
+                {
+                    "ref":"const",
+                    "value":"0000000000000000"
+                }
+            ]
+        },
+        {
+            "mnemonic":"bnz",
+            "opcode":"1100",
+            "input":[
+                {
+                    "name":"ra",
+                    "type":"REG"
+                },{
+                    "name":"off",
+                    "type":"LABEL",
+                    "relative":true,
+                    "size":8
+                }
+            ],
+            "output":[
+                {
+                    "ref":"instr"
+                },
+                {
+                    "ref":"off",
+                    "msb":7,
+                    "lsb":4
+                },
+                {
+                    "ref":"ra"
+                },
+                {
+                    "ref":"off",
+                    "msb":3,
+                    "lsb":0
+                },
+                {
+                    "ref":"const",
+                    "value":"0000000000000000"
+                }
+            ]
+        },
+        {
+            "mnemonic":"bzed",
+            "opcode":"1101",
+            "input":[
+                {
+                    "name":"ra",
+                    "type":"REG"
+                },{
+                    "name":"off",
+                    "type":"LABEL",
+                    "relative":true,
+                    "size":8
+                }
+            ],
+            "output":[
+                {
+                    "ref":"instr"
+                },
+                {
+                    "ref":"off",
+                    "msb":7,
+                    "lsb":4
+                },
+                {
+                    "ref":"ra"
+                },
+                {
+                    "ref":"off",
+                    "msb":3,
+                    "lsb":0
+                },
+                {
+                    "ref":"const",
+                    "value":"0000000000000000"
+                }
+            ]
+        },
+        {
+            "mnemonic":"jr",
+            "opcode":"1110",
+            "input":[
+                {
+                    "name":"ra",
+                    "type":"REG"
+                }
+            ],
+            "output":[
+                {
+                    "ref":"instr"
+                },
+                {
+                    "ref":"const",
+                    "value":"0000"
+                },
+                {
+                    "ref":"ra"
+                },
+                {
+                    "ref":"const",
+                    "value":"0000"
+                },
+                {
+                    "ref":"const",
+                    "value":"0000000000000000"
+                }
+            ]
+        },
+        {
+            "mnemonic":"jri",
+            "opcode":"1111",
+            "input":[
+                {
                     "name":"addr",
-                    "type":"UNSIGNED",
-                    "size":16
+                    "type":"LABEL",
+                    "relative":false,
+                    "size":12
                 }
             ],
             "output":[
@@ -90,18 +525,36 @@
                 },
                 {
                     "ref":"addr",
-                    "msb":15,
-                    "lsb":8
-                },
-                {
-                    "ref":"ra"
-                },
-                {
-                    "ref":"addr",
-                    "msb":7,
+                    "msb":11,
                     "lsb":0
+                },
+                {
+                    "ref":"const",
+                    "value":"0000000000000000"
                 }
+               
+            ]
+        },
+        {
+            "mnemonic":"end",
+            "opcode":"0000",
+            "input":[
+            ],
+            "output":[
+                {
+                    "ref":"instr"
+                },
+                {
+                    "ref":"const",
+                    "value":"000000000000"
+                },
+                {
+                    "ref":"const",
+                    "value":"0000000000000000"
+                }
+               
             ]
         }
+       
     ]
 }

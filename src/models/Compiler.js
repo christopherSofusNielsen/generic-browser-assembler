@@ -35,30 +35,35 @@ class Compiler {
     let compiled = [];
 
     //go through each instruction
-    this.state.preCompiled.forEach((o) => {
+    this.state.preCompiled.forEach((row) => {
       try {
         //find instr in ISA
-        let instrISA = util.findInstr(o.instr, this.state.isa.instrs);
+        let instrISA = util.findInstr(row.instr, this.state.isa.instrs);
 
         //check parameters
-        if (instrISA.input.length !== o.parameters.length) {
+        if (instrISA.input.length !== row.parameters.length) {
           throw new Error(
-            `${o.instr} needs ${instrISA.input.length} arguments`
+            `${row.instr} needs ${instrISA.input.length} arguments`
           );
         }
 
         //convert parameters
-        let parametersB = [];
-        for (let i = 0; i < instrISA.input.length; i++) {
-          let res = util.convertParameter(
-            this.state.isa,
-            instrISA.mnemonic,
-            instrISA.input[i],
-            o.parameters[i],
-            this.state.labelTbl
-          );
-          parametersB[i] = res;
-        }
+        let parametersB = util.convertParameters(
+          this.state.isa,
+          this.state.labelTbl,
+          instrISA,
+          row
+        );
+        // for (let i = 0; i < instrISA.input.length; i++) {
+        //   let res = util.convertParameter(
+        //     this.state.isa,
+        //     instrISA.mnemonic,
+        //     instrISA.input[i],
+        //     o.parameters[i],
+        //     this.state.labelTbl
+        //   );
+        //   parametersB[i] = res;
+        // }
 
         //Get opcode
         if (!instrISA.opcode) {
@@ -75,11 +80,11 @@ class Compiler {
         }
 
         compiled.push({
-          line: o.line,
+          line: row.line,
           word,
         });
       } catch (error) {
-        this.add2Console(types.ERROR, o.line, error);
+        this.add2Console(types.ERROR, row.line, error);
       }
     });
     console.log(compiled);
