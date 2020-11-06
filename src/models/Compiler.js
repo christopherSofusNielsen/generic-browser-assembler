@@ -54,16 +54,7 @@ class Compiler {
           instrISA,
           row
         );
-        // for (let i = 0; i < instrISA.input.length; i++) {
-        //   let res = util.convertParameter(
-        //     this.state.isa,
-        //     instrISA.mnemonic,
-        //     instrISA.input[i],
-        //     o.parameters[i],
-        //     this.state.labelTbl
-        //   );
-        //   parametersB[i] = res;
-        // }
+      
 
         //Get opcode
         if (!instrISA.opcode) {

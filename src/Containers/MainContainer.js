@@ -62,6 +62,12 @@ class MainContainer extends Component {
       case types.BINARY_DEBUG_MODE:
         return this.displayCode(raw, formatter.binaryDebugFormatter);
 
+      case types.CHISEL_MODE:
+        return this.displayCode(raw, formatter.chiselFormatter);
+
+      case types.CHISEL_DEBUG_MODE:
+        return this.displayCode(raw, formatter.chiselDebugFormatter);
+
       default:
     }
   };

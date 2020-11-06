@@ -9,6 +9,8 @@ const ControlPanel = (props) => (
     <select value={props.displayMode} onChange={props.onDisplayModeChange}>
       <option value={types.BINARY_MODE}>Binary</option>
       <option value={types.BINARY_DEBUG_MODE}>Debug</option>
+      <option value={types.CHISEL_MODE}>Chisel</option>
+      <option value={types.CHISEL_DEBUG_MODE}>Chisel Debug</option>
     </select>
   </div>
 );

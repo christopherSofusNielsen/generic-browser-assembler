@@ -245,10 +245,6 @@
                     "name":"no",
                     "type":"UINT",
                     "size":4
-                },
-                {
-                    "ref":"const",
-                    "value":"0000000000000000"
                 }
             ],
             "output":[
